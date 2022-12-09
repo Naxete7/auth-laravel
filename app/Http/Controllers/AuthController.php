@@ -39,7 +39,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $input = $request->only('email', 'password');
-        
+
         $jwt_token = null;
 
         if (!$jwt_token = JWTAuth::attempt($input)) {
@@ -54,4 +54,13 @@ class AuthController extends Controller
                 'token' => $jwt_token,
             ]);
     }
+
+    public function profile()
+    {
+
+        //dd(auth()->user()->email);
+        return response()->json(auth()->user());;
+    }
+
+    
 }
