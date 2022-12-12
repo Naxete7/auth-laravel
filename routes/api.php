@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookController;
+use App\Http\Middleware\isSuperAdmin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,10 +35,18 @@ Route::group([
     Route::get('/me', [AuthController::class, 'profile']);
 });
 
-//USERS
-
+// USERS
 Route::group([
-    'middleware' => 'jwt.auth'
+    'middleware' => ['jwt.auth', 'isSuperAdmin']
 ], function () {
-   Route::post ('/add_super_admin_role', [UserController::class, 'addSuperAdminRoleByIdUser']);
+    Route::post('/add_super_admin_role/{id}', [UserController::class, 'addSuperAdminRoleByIdUser']);
 });
+
+// BOOKS
+Route::group([
+    'middleware' => ['jwt.auth']
+], function () {
+    Route::post('/books', [BookController::class, 'createBook']);
+    Route::put('/books/{id}',[BookController::class,'updateBook']);
+});
+
